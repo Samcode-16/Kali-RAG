@@ -6,6 +6,8 @@ from sentence_transformers import CrossEncoder
 reranker = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2", max_length=512)
 USE_RERANK = False   # switch to False to compare
 
+THRESHOLD = 0.35
+
 open("failures.txt", "w").close()
 
 LUKS     = ["raspberry-pi-with-luks-full-disk-encryption",

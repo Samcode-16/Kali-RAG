@@ -1,6 +1,12 @@
+from dotenv import load_dotenv
+load_dotenv()
+import os
+from google import genai
+from google.genai import types
 from retrieval import chunks, hybrid_top, THRESHOLD
 
-PROVIDER = "anthropic"   
+MODEL = os.environ.get("GEMINI_MODEL", "gemini-3.8-flash")   # override with $env:GEMINI_MODEL
+client = genai.Client()   # reads GEMINI_API_KEY from the environment
 
 SYSTEM = """You are a Kali Linux troubleshooting assistant.
 Answer ONLY using the numbered sources provided. Do not use outside knowledge.
@@ -11,18 +17,12 @@ I don't know based on the Kali docs.
 Keep the answer short and practical."""
 
 def call_llm(system, user):
-    if PROVIDER == "anthropic":
-        import anthropic
-        client = anthropic.Anthropic()   # reads ANTHROPIC_API_KEY from the environment
-        msg = client.messages.create(
-            model="claude-sonnet-5-5", max_tokens=800, system=system,
-            messages=[{"role": "user", "content": user}])
-        return msg.content[0].text
-    import ollama
-    r = ollama.chat(model="llama3.2", messages=[
-        {"role": "system", "content": system},
-        {"role": "user", "content": user}])
-    return r["message"]["content"]
+    r = client.models.generate_content(
+        model=MODEL,
+        contents=user,
+        config=types.GenerateContentConfig(system_instruction=system, temperature=0.0),
+    )
+    return r.text or "(empty response from model)"
 
 def answer(question):
     best, top = hybrid_top(question, k=3)
