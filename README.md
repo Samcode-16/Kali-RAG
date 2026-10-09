@@ -181,5 +181,5 @@ This assistant helps fix problems with the Kali Linux system itself: installatio
 
 ## Author
 
-~ Samudyatha · BCA, 5th semester · Generative AI coursework project
+Samudyatha - Generative AI coursework project
 
