@@ -130,7 +130,7 @@ def _dpkg(a):
         return None
     if len(a) == 2 and a[0] in {"-s", "-l", "-L", "--status", "--listfiles"} and PKG_RE.match(a[1]):
         return None
-    return "that dpkg usage is not allowed"
+    return "dpkg allows only: -s PACKAGE or -L PACKAGE (one package at a time), -l [PACKAGE], --audit"
 
 
 def _apt_mark(a):

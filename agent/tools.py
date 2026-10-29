@@ -122,8 +122,8 @@ class KaliSession:
         else:
             out = "\n\n".join(f"[{n}] ({chunks[i][0]})\n{chunks[i][1][:1500]}"
                               for n, i in enumerate(top, 1))
-        self.log("tool", tool="search_documentation", query=str(query),
-                 best_score=round(best, 3), pages=[chunks[i][0] for i in top])
+            self.log("tool", tool="search_documentation", query=str(query),
+                best_score=round(best, 3), pages=[chunks[i][0] for i in top], output=out[:3000])
         return {"ok": True, "blocked": False, "output": out}
 
     def _combine(self, cmds):

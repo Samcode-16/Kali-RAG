@@ -41,6 +41,14 @@ for f in Path(DOCS_DIR).rglob("*.md"):
                 label = f"{f.parent.name} | {title} | {heading}" if USE_TITLE else f"{f.parent.name} | {heading}"
                 chunks.append((f.parent.name, label + "\n" + piece))
 
+# TEMPORARY DIAGNOSTIC
+print("\nChecking indexed chunks for Kali key-recovery instructions:")
+
+for i, (folder, text) in enumerate(chunks):
+    if "archive-keyring.gpg" in text.lower() or "kali-archive-keyring" in text.lower():
+        print(f"\nChunk {i} | Folder: {folder}")
+        print(text[:1000])
+
 model = SentenceTransformer("all-MiniLM-L6-v2")
 vecs = model.encode([c[1] for c in chunks])
 bm25 = BM25Okapi([tok(c[1]) for c in chunks])
@@ -56,12 +64,21 @@ def hybrid_top(question, k=3):
         for r, i in enumerate(rank_list[:50]):
             fused[i] = fused.get(i, 0) + 1 / (60 + r)
     ranked = sorted(fused, key=fused.get, reverse=True)
-    top, seen = [], set()
+    
+    top = []
+    folder_counts = {}
+
     for i in ranked:
-        if chunks[i][0] in seen:
+        folder = chunks[i][0]
+
+        # Allow up to 2 relevant chunks per document folder.
+        if folder_counts.get(folder, 0) >= 3:
             continue
-        seen.add(chunks[i][0])
+
+        folder_counts[folder] = folder_counts.get(folder, 0) + 1
         top.append(i)
+
         if len(top) == k:
             break
+
     return best_dense, top
