@@ -1,0 +1,57 @@
+---
+title: Kali inside UTM (Guest VM)
+description:
+icon:
+weight: 217
+author: ["gamb1t",]
+---
+
+To install and set up a UTM VM it is pretty straightforward. We first download [UTM](https://mac.getutm.app/) and then launch the app. After this we can click create VM and start the short process:
+
+![](utm-setup-2.png)
+
+We will select Virtualize, as we will be using a [Kali Apple M1 installer](/get-kali/#kali-installer-images) iso which will bring us to the next page:
+
+![](utm-setup-3.png)
+
+From here, we will select "Other" which will again bring us to the next page:
+
+![](utm-setup-4.png)
+
+Now we are only going to change one item, which is selecting our "Boot ISO Image" and choosing the ISO we downloaded previously. Once that is done we can hit continue:
+
+![](utm-setup-5.png)
+
+We won't the default size here, and will just continue forward but you can increase or decrease it for your needs and [installation sizes](/docs/installation/installation-sizes/):
+
+![](utm-setup-6.png)
+
+We again will skip changing anything on this page, however if you want a shared directory feel free to add it:
+
+![](utm-setup-8.png)
+
+Now we are at the summary and we can re-name our VM to be "Kali Linux". Once complete, we will hit save and then press the settings button. Due to a bug in the current UTM version, we will have to install Kali in console only mode.
+
+![](utm-setup-9.png)
+
+From here we can add the device "Serial" under "Devices":
+
+![](utm-setup-10.png)
+![](utm-setup-10.5.png)
+
+Now we can save and press play on the VM. Once prompted, we select "Install":
+
+![](utm-setup-11.png)
+
+Once the install is finished, clear the ISO from the VM's CD/DVD drive.
+
+Then, go to the VM's settings and remove the "Serial" device by right-clicking and selecting "Remove":
+
+![](utm-setup-12.png)
+
+We should also update the Display Card emulation. Select the `virtio-gpu-pci`
+option:
+
+![](utm-setup-13.png)
+
+We should scroll down under "Shared Directory" and select the installer iso image and remove it, now we can now use our VM like normal.
